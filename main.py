@@ -1,39 +1,19 @@
-import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import telebot
 
-# -----------------
+# توکن ربات
 TOKEN = "8483349496:AAFnIRt6X_3M2B5l3uxvJM6IxxKVZw277mE"
-ADMIN_ID = 1774596878
-# -----------------
+bot = telebot.TeleBot(TOKEN)
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+# وقتی کسی استارت بزنه
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.reply_to(message, "سلام ✋ به ربات ویسار جان خوش آمدی 🌹")
 
-def start(update, context):
-    user = update.effective_user
-    update.message.reply_text(
-        f"سلام {user.first_name} 🌹\n"
-        f"به ربات ویسار خوش آمدی 🤖\n\n"
-        "اینجا میتونی:\n"
-        "- اطلاعات VIP بگیری 💎\n"
-        "- فایل و آموزش بخری 📂\n"
-        "- لینک یوتیوب ببینی 🎥"
-    )
+# وقتی کسی متن بفرسته
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, f"تو نوشتی: {message.text}")
 
-def echo(update, context):
-    update.message.reply_text(f"📩 گفتی: {update.message.text}")
-
-def main():
-    updater = Updater(TOKEN, use_context=True)
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
-
-    updater.start_polling()
-    updater.idle()
-
+# اجرای ربات
 if __name__ == "__main__":
-    main()
+    bot.polling(none_stop=True)
