@@ -1,1 +1,1 @@
-python-telegram-bot==13.15
+worker: python main.py
